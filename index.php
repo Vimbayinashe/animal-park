@@ -10,11 +10,14 @@ include_once "private.php";
 $dbh = new PDO('mysql:host=localhost;dbname=zoo;charset=UTF8', $user,$password);
 
 //define search variables
+$input = "";
 $message = "";
 $menuInput = "";
-$results = array();
 $textInput = "";
-$tableheader = "";
+$selection;
+$result = "";
+// $results = array();
+// $tableheader = "";
 
 
 //select all animals
@@ -40,34 +43,27 @@ if(isset($_POST['search'])) {
         // incorrect input values will nullify user input
         if (!preg_match("/^[a-zA-ZåäöÅÄÖ ]*$/",$textInput)) {
             $message = "ange giltigt namn format";
-            $textInput = "";    
-        } else {
-            $syntaxError = "";
-            // echo $textInput;
-        }     
-    } else {
-        $textInput = "";
-    }
+            unset($textInput);    
+        } 
+
+        $input = $textInput;
+
+    } 
     
     //setting $menuInput variable from user's selection
     if(isset($_POST['animal'])){
         $menuInput = $_POST['animal'];
-        // echo $menuInput;
-    } else {
-        $menuInput = "";
-    }
-
-    //handling same search values so that only one result is shown
-    if ($menuInput == $textInput) {
-        unset($menuInput);
-        unset($textInput);
-        $message = "Gör endast ett val";
+        $input = $menuInput; 
     } 
 
-    //handling empty search values from both inputs
+    //handling empty or same search values 
     if($menuInput == "" && $textInput == "") {
         $message = "Du behöver ange ett sökvärde";
-    }
+    } else  if ($menuInput == $textInput) {
+        $message = "Gör endast ett val";
+        unset($menuInput);
+        unset($textInput);
+    } 
 
     //PLEASE CONFIRM IF THIS IS NECESSARY
     //if either input is "alla" - populate website with $allAnimals  
@@ -75,9 +71,10 @@ if(isset($_POST['search'])) {
         foreach ($allAnimals as $animal) {
             echo $animal['name']."<br>";
         } 
-        // $menuInput = "";
-        // $textInput = "";
+        // unset($menuInput);
+        // unset($textInput);
     }
+
 }
 
 //a function to sanitise user text input
@@ -89,28 +86,33 @@ function cleanData ($data) {
 }
 
 
-//select an animal from drop-down menu
-$query = "SELECT * FROM animals where name = ?";
+//select an animal 
+$query = "SELECT * FROM animals where name = :name";
 
 $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
 
-$statement->execute(array($menuInput));
+$statement->execute(array(':name' => $input));
+// $statement->execute(array($menuInput));
 
-$menuOutput = $statement->fetchAll();
+$selection = $statement->fetchAll();
 
-$results[] = $menuOutput;
+if(($selection)){
+    $result = $selection[0]['name'];
+}
+
+// $results[] = $menuOutput;
 
 
 //select an animal from input box
-$query = "SELECT * FROM animals where name like :name";
+// $query = "SELECT * FROM animals where name like :name";
 
-$statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
+// $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
 
-$statement->execute(array(':name' => $textInput));
+// $statement->execute(array(':name' => $textInput));
 
-$textOutput = $statement->fetchAll();
+// $textOutput = $statement->fetchAll();
 
-$results[] = $textOutput;
+// $results[] = $textOutput;
 
 // echo "<pre>";
 // var_dump($results);
@@ -130,6 +132,7 @@ $results[] = $textOutput;
 
     <p><?php echo $message; ?></p>
 
+    <!-- Data Input from User -->
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
         method="post"
     >
@@ -152,13 +155,13 @@ $results[] = $textOutput;
         
     </form>
 
+    <!-- Results from search -->
     <div>
         <?php
-            foreach ($results as $animal) {
-                if(isset($animal[0])) {
-                    echo "<p>".$animal[0]['name']."</p>";
-                }
-            } 
+            // foreach ($results as $animal) {
+                echo $result;
+
+            // } 
         ?>          
     </div>
 
