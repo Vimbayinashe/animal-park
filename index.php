@@ -31,7 +31,6 @@ $allAnimals = $statementAll->fetchAll();
 if(isset($_POST['search'])) {
 
     $message = "";
-    //$tableheader = "<table><thead><tr><th>Name</th><th>Price</th></tr></thead><tbody>";
 
     //setting $textInput variable from user's selection
     if(isset($_POST['userText'])) {
@@ -60,14 +59,14 @@ if(isset($_POST['search'])) {
 
     //handling same search values so that only one result is shown
     if ($menuInput == $textInput) {
-        $textInput = "";
-        echo "deleted";
+        unset($menuInput);
+        unset($textInput);
+        $message = "Gör endast ett val";
     } 
 
     //handling empty search values from both inputs
     if($menuInput == "" && $textInput == "") {
         $message = "Du behöver ange ett sökvärde";
-        $tableheader = "";
     }
 
     //PLEASE CONFIRM IF THIS IS NECESSARY
