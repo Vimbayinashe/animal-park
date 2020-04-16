@@ -44,7 +44,7 @@ if(isset($_POST['search'])) {
             $textInput = "";    
         } else {
             $syntaxError = "";
-            echo $textInput;
+            // echo $textInput;
         }     
     } else {
         $textInput = "";
@@ -53,7 +53,7 @@ if(isset($_POST['search'])) {
     //setting $menuInput variable from user's selection
     if(isset($_POST['animal'])){
         $menuInput = $_POST['animal'];
-        echo $menuInput;
+        // echo $menuInput;
     } else {
         $menuInput = "";
     }
@@ -113,9 +113,9 @@ $textOutput = $statement->fetchAll();
 
 $results[] = $textOutput;
 
-echo "<pre>";
-var_dump($results);
-echo "</pre>";
+// echo "<pre>";
+// var_dump($results);
+// echo "</pre>";
 
 ?>
 
@@ -142,7 +142,7 @@ echo "</pre>";
             foreach ($allAnimals as $animal) {
                 echo "<option>".$animal['name']."</option>";
             } 
-            ?>
+        ?>
         </select>
 
         <label for="search">Sök efter namn: </label>
@@ -152,6 +152,16 @@ echo "</pre>";
         </div>
         
     </form>
+
+    <div>
+        <?php
+            foreach ($results as $animal) {
+                if(isset($animal[0])) {
+                    echo "<p>".$animal[0]['name']."</p>";
+                }
+            } 
+        ?>          
+    </div>
 
 
 </body>
