@@ -10,8 +10,11 @@ include_once "private.php";
 $dbh = new PDO('mysql:host=localhost;dbname=zoo;charset=UTF8', $user,$password);
 
 //define search variables
+$message = "";
 $menuInput = "";
+$results = array();
 $textInput = "";
+$tableheader = "";
 
 
 //select all animals
@@ -26,19 +29,19 @@ $allAnimals = $statementAll->fetchAll();
 
 //get input from user's search
 if(isset($_POST['search'])) {
-    $menuInput = $_POST['animal'];
-    $textInput = $_POST['userText'];
-    // echo $menuInput;
-    // echo $textInput;
 
+    $message = "";
+    //$tableheader = "<table><thead><tr><th>Name</th><th>Price</th></tr></thead><tbody>";
+
+    //setting $textInput variable from user's selection
     if(isset($_POST['userText'])) {
         $textInput = cleanData($_POST['userText']);   
         
         // check if text input only contains letters and whitespace
+        // incorrect input values will nullify user input
         if (!preg_match("/^[a-zA-ZåäöÅÄÖ ]*$/",$textInput)) {
-            echo "incorrect text syntax";
-            $syntaxError = "ange giltigt namn format";
-            $textInput = "";    //re-declared as "" as a security measure
+            $message = "ange giltigt namn format";
+            $textInput = "";    
         } else {
             $syntaxError = "";
             echo $textInput;
@@ -47,6 +50,7 @@ if(isset($_POST['search'])) {
         $textInput = "";
     }
     
+    //setting $menuInput variable from user's selection
     if(isset($_POST['animal'])){
         $menuInput = $_POST['animal'];
         echo $menuInput;
@@ -54,7 +58,27 @@ if(isset($_POST['search'])) {
         $menuInput = "";
     }
 
-    //if both = "alla" - populate website with $allAnimals  
+    //handling same search values so that only one result is shown
+    if ($menuInput == $textInput) {
+        $textInput = "";
+        echo "deleted";
+    } 
+
+    //handling empty search values from both inputs
+    if($menuInput == "" && $textInput == "") {
+        $message = "Du behöver ange ett sökvärde";
+        $tableheader = "";
+    }
+
+    //PLEASE CONFIRM IF THIS IS NECESSARY
+    //if either input is "alla" - populate website with $allAnimals  
+    if($menuInput == "alla" || $textInput == "alla") {
+        foreach ($allAnimals as $animal) {
+            echo $animal['name']."<br>";
+        } 
+        // $menuInput = "";
+        // $textInput = "";
+    }
 }
 
 //a function to sanitise user text input
@@ -73,7 +97,9 @@ $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));
 
 $statement->execute(array($menuInput));
 
-$selection = $statement->fetchAll();
+$menuOutput = $statement->fetchAll();
+
+$results[] = $menuOutput;
 
 
 //select an animal from input box
@@ -83,7 +109,13 @@ $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));
 
 $statement->execute(array(':name' => $textInput));
 
-$selection = $statement->fetchAll();
+$textOutput = $statement->fetchAll();
+
+$results[] = $textOutput;
+
+echo "<pre>";
+var_dump($results);
+echo "</pre>";
 
 ?>
 
@@ -97,13 +129,15 @@ $selection = $statement->fetchAll();
 <body>
     <h1></h1>
 
+    <p><?php echo $message; ?></p>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
         method="post"
     >
-        <label for="animal">Välj ett djur:</label>
+        <label for="animal">Välj djur:</label>
         <select name="animal" id="animal">
-        <option value="">  -- välj -- </option>
+        <option value="">   -- välj --  </option>
+        <option value="alla">  Alla djur </option>
         <?php
             foreach ($allAnimals as $animal) {
                 echo "<option>".$animal['name']."</option>";
@@ -118,7 +152,6 @@ $selection = $statement->fetchAll();
         </div>
         
     </form>
-    <!-- <p><?php echo $success; ?></p> -->
 
 
 </body>
