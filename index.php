@@ -6,7 +6,13 @@ error_reporting(E_ALL);
 
 include_once "private.php";
 
-$dbh = new PDO('mysql:host=localhost;dbname=zoo;charset=UTF8', $user, $password);
+//connect to database
+$dbh = new PDO('mysql:host=localhost;dbname=zoo;charset=UTF8', $user,$password);
+
+//define search variables
+$menuInput = "";
+$textInput = "";
+
 
 //select all animals
 $queryAll = "SELECT * FROM animals";
@@ -17,10 +23,6 @@ $statementAll->execute();
 
 $allAnimals = $statementAll->fetchAll();
 
-// echo "<pre>";
-// var_dump($allAnimals);
-// echo "<br>";
-// echo "</pre>";
 
 //get input from user's search
 if(isset($_POST['search'])) {
@@ -36,6 +38,7 @@ if(isset($_POST['search'])) {
         if (!preg_match("/^[a-zA-ZåäöÅÄÖ ]*$/",$textInput)) {
             echo "incorrect text syntax";
             $syntaxError = "ange giltigt namn format";
+            $textInput = "";    //re-declared as "" as a security measure
         } else {
             $syntaxError = "";
             echo $textInput;
@@ -43,11 +46,15 @@ if(isset($_POST['search'])) {
     } else {
         $textInput = "";
     }
-
+    
     if(isset($_POST['animal'])){
         $menuInput = $_POST['animal'];
         echo $menuInput;
+    } else {
+        $menuInput = "";
     }
+
+    //if both = "alla" - populate website with $allAnimals  
 }
 
 //a function to sanitise user text input
@@ -64,26 +71,19 @@ $query = "SELECT * FROM animals where name = ?";
 
 $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
 
-$statement->execute(array('Gädda'));
+$statement->execute(array($menuInput));
 
 $selection = $statement->fetchAll();
 
-echo "<pre>";
-var_dump($selection);
-echo "</pre>";
 
 //select an animal from input box
 $query = "SELECT * FROM animals where name like :name";
 
 $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
 
-$statement->execute(array(':name' =>'Tor%'));
+$statement->execute(array(':name' => $textInput));
 
 $selection = $statement->fetchAll();
-
-echo "<pre>";
-var_dump($selection);
-echo "</pre>";
 
 ?>
 
