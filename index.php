@@ -14,7 +14,6 @@ $input = "";
 $message = "";
 $menuInput = "";
 $textInput = "";
-// $selection;
 $sentence = "";
 $result = "";
 $uploadMessage = "";
@@ -48,7 +47,6 @@ if(isset($_POST['search'])) {
         }
 
     } else if(isset($_POST['animal']) && ($_POST['animal'] != "")){
-        //setting $menuInput variable from user's selection
         $menuInput = $_POST['animal'];
         $input = $menuInput; 
 
@@ -56,10 +54,10 @@ if(isset($_POST['search'])) {
         $message = "Du behöver ange ett sökvärde";
     } 
  
-
+    /** Error message not working */
     // if (!(isset($selection))  ) {
     //     //echo count($selection);
-    //     $message = "Sökträff inte hittade";
+    //     $message = "Inget resultat hittades";
     // }
 
 }
@@ -82,10 +80,6 @@ $statement->execute(array(':name' => $input));
 
 $selection = $statement->fetchAll();
 
-// echo "<pre>";
-// var_dump($selection);
-// echo "</pre>";
-
 if(($selection)){
     $result = $selection[0]['name'];
     $sentence = "<div><p>Namn: ". $selection[0]['name'] ."</p><p>Kategori: ".$selection[0]['category']."</p><p>Födelsedatum: ".$selection[0]['birthday']."</p></div>";
@@ -99,6 +93,7 @@ if ($_FILES) {
     $fileType = strtolower(pathinfo($uploadPath,PATHINFO_EXTENSION));
     unset($uploadMessage);
 
+    // Conditions to check uploaded file before uploading
     if (file_exists($uploadPath)) {
         $uploadMessage = "Den filen redan finns.";
     } else if($uploadPath == "./UserImages/") {
@@ -176,6 +171,7 @@ if ($_FILES) {
                     <input type="submit" name="upload" value="Ladda upp fil" />
                 </div>
             </form>
+            <!-- Message from file uploading attempt -->
             <div id = "upload-message"> <?php echo $uploadMessage; ?> </div>
         </div>
 
@@ -183,7 +179,5 @@ if ($_FILES) {
 
     <!-- Results from search -->
     <div id = "result"> <?php echo $sentence; ?> </div>
-
-
 </body>
 </html>
