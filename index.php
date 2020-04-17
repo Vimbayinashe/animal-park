@@ -134,45 +134,58 @@ if(($selection)){
 </head>
 <body>
     <h1>Djurparken</h1>
-    <p id = "about">Här kan du läsa intressanta fakta om djuren</p id = "info">
 
+    
     <!-- Data Input from User -->
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
-        method="post"
-    >
-        <label for="animal">Välj ett djur:</label>
-        <select name="animal" id="animal">
-        <option value="">   -- välj --  </option>
-        <!-- <option value="alla">  Alla djur </option> -->
-        <?php
-            foreach ($allAnimals as $animal) {
-                echo "<option>".$animal['name']."</option>";
-            } 
-        ?>
-        </select>
-        <span><b>eller</b></span>
-        <label for="search">Sök efter namn: </label>
-        <input type="text" name="userText">
+    <div id = "queries">
         <div>
-            <input name="search" type="submit">        
-        </div>
-        
-    </form>
+            <p class = "info">Här kan du läsa intressanta fakta om djuren</p>
 
-    <p id = "message"><?php echo $message; ?></p>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
+                method="post"
+            >
+                <label for="animal">Välj ett djur:</label>
+                <select name="animal" id="animal">
+                <option value="">   -- välj --  </option>
+                <!-- <option value="alla">  Alla djur </option> -->
+                <?php
+                    foreach ($allAnimals as $animal) {
+                        echo "<option>".$animal['name']."</option>";
+                    } 
+                ?>
+                </select>
+                <span><b>eller</b></span>
+                <label for="search">Sök efter namn: </label>
+                <input type="text" name="userText">
+                <div class = "button">
+                    <input name="search" type="submit">        
+                </div>
+            </form>
+
+            <p id = "message"><?php echo $message; ?></p>
+        </div>
+
+        <!-- File Uploading -->
+        <div id = "file-upload">
+            <p class = "info">Här kan du ladda upp bilder</p>
+
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
+                method="post" 
+                enctype="multipart/form-data"
+            >
+                <input type="hidden" name="MAX_FILE_SIZE" value="500000" />
+                <input type="file" name="fileToUpload" id="fileToUpload"/>
+                <div class = "button">
+                    <input type="submit" name="upload" value="Ladda upp fil" />
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Results from search -->
-    <div>
-        <?php
-            // foreach ($results as $animal) {
-                echo $result;
-                echo $sentence;
-            // } 
-        ?>          
-    </div>
-    <!-- <div><p>Namn: </p><p>Kategori: </p><p>Födelsedatum: </p></div> -->
+    <div id = "result"> <?php echo $sentence; ?> </div>
 
-    <!-- File Uploading -->
+    <div> <?php echo $sentence; ?> </div>
 
 </body>
 </html>

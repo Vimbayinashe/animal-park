@@ -8,6 +8,7 @@ body{
 
 #message {
     color: red;
+    /* height: 2vh; */
     margin: 1em 1.5em;
 }
 
@@ -16,7 +17,29 @@ h1 {
     padding-left: 2vw;
 }
 
-#about {
+.info {
     /* font-style: italic; */
-    margin: 1em;
+    font-size: 110%;
+    margin: 2.5em 1em 1em 1em;
+}
+
+.button > input {
+    background-color: rgb(208, 231, 245);
+    border-radius: 0.5em;
+    padding: 0.4em;
+}
+
+#queries {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+}
+
+#file-upload {
+    margin-left: 8vw;
+}
+
+#result {
+    font-size: 120%;
+    padding: 1em;
 }
