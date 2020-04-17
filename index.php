@@ -96,9 +96,22 @@ if ($_FILES) {
 
     $uploadDir = "./UserImages/";
     $uploadPath = $uploadDir . basename($_FILES['fileToUpload']['name']);
+    $fileType = strtolower(pathinfo($uploadPath,PATHINFO_EXTENSION));
     unset($uploadMessage);
 
-    if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadPath)) {
+    if (file_exists($uploadPath)) {
+        $uploadMessage = "Den filen redan finns.";
+    } else if($uploadPath == "./UserImages/") {
+        $uploadMessage = "Ingen fil vald.";
+
+    } else if ($_FILES["fileToUpload"]["size"] > 1000000) {
+        $uploadMessage = "Maximal fil storlek är 1MB";
+
+    } else if(  $fileType != "jpg" && $fileType != "png" 
+                && $fileType != "jpeg" && $fileType != "gif" ) {
+        $uploadMessage =  "Endast JPG, JPEG, PNG & GIF filar accepterade";
+    } else if ( move_uploaded_file($_FILES['fileToUpload']['tmp_name'], 
+                $uploadPath) ) {
         $uploadMessage = basename( $_FILES["fileToUpload"]["name"])." är uppladdad";
     } else {
         $uploadMessage = "Något gick fel";
@@ -151,7 +164,7 @@ if ($_FILES) {
 
         <!-- File Uploading -->
         <div id = "file-upload">
-            <p class = "info">Här kan du ladda upp bilder</p>
+            <p class = "info">Här kan du ladda upp bilder av djur</p>
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
                 method="post" 
