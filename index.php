@@ -133,24 +133,24 @@ if(($selection)){
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1></h1>
-
+    <h1>Djurparken</h1>
+    <p id = "about">Här kan du läsa intressanta fakta om djuren</p id = "info">
 
     <!-- Data Input from User -->
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
         method="post"
     >
-        <label for="animal">Välj djur:</label>
+        <label for="animal">Välj ett djur:</label>
         <select name="animal" id="animal">
         <option value="">   -- välj --  </option>
-        <option value="alla">  Alla djur </option>
+        <!-- <option value="alla">  Alla djur </option> -->
         <?php
             foreach ($allAnimals as $animal) {
                 echo "<option>".$animal['name']."</option>";
             } 
         ?>
         </select>
-
+        <span><b>eller</b></span>
         <label for="search">Sök efter namn: </label>
         <input type="text" name="userText">
         <div>

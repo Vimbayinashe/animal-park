@@ -2,7 +2,21 @@
     margin: 0.5em;
 }
 
+body{
+    margin-left: 2em;
+}
+
 #message {
     color: red;
-    margin-left: 1.5em;
+    margin: 1em 1.5em;
+}
+
+h1 {
+    margin: 2vw;
+    padding-left: 2vw;
+}
+
+#about {
+    /* font-style: italic; */
+    margin: 1em;
 }
