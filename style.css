@@ -43,3 +43,9 @@ h1 {
     font-size: 120%;
     padding: 1em;
 }
+
+#upload-message {
+    font-style: italic;
+    font-weight: bold;
+    padding: 1em ;
+}

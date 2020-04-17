@@ -17,9 +17,7 @@ $textInput = "";
 // $selection;
 $sentence = "";
 $result = "";
-// $results = array();
-// $tableheader = "";
-
+$uploadMessage = "";
 
 //select all animals
 $queryAll = "SELECT * FROM animals";
@@ -64,17 +62,6 @@ if(isset($_POST['search'])) {
     //     $message = "Sökträff inte hittade";
     // }
 
-    //PLEASE CONFIRM IF THIS IS NECESSARY
-    //if either input is "alla" - populate website with $allAnimals  
-    // if($menuInput == "alla" || $textInput == "alla") {
-    //     foreach ($allAnimals as $animal) {
-    //         echo $animal['name']."<br>";
-    //     } 
-
-        // unset($menuInput);
-        // unset($textInput);
-    // }
-
 }
 
 //a function to sanitise user text input
@@ -104,23 +91,20 @@ if(($selection)){
     $sentence = "<div><p>Namn: ". $selection[0]['name'] ."</p><p>Kategori: ".$selection[0]['category']."</p><p>Födelsedatum: ".$selection[0]['birthday']."</p></div>";
 } 
 
+//File Uploading
+if ($_FILES) {
 
+    $uploadDir = "./UserImages/";
+    $uploadPath = $uploadDir . basename($_FILES['fileToUpload']['name']);
+    unset($uploadMessage);
 
+    if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadPath)) {
+        $uploadMessage = basename( $_FILES["fileToUpload"]["name"])." är uppladdad";
+    } else {
+        $uploadMessage = "Något gick fel";
+    }
+}
 
-//select an animal from input box
-// $query = "SELECT * FROM animals where name like :name";
-
-// $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
-
-// $statement->execute(array(':name' => $textInput));
-
-// $textOutput = $statement->fetchAll();
-
-// $results[] = $textOutput;
-
-// echo "<pre>";
-// var_dump($results);
-// echo "</pre>";
 
 ?>
 
@@ -179,13 +163,14 @@ if(($selection)){
                     <input type="submit" name="upload" value="Ladda upp fil" />
                 </div>
             </form>
+            <div id = "upload-message"> <?php echo $uploadMessage; ?> </div>
         </div>
+
     </div>
 
     <!-- Results from search -->
     <div id = "result"> <?php echo $sentence; ?> </div>
 
-    <div> <?php echo $sentence; ?> </div>
 
 </body>
 </html>
