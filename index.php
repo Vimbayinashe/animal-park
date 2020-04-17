@@ -14,7 +14,7 @@ $input = "";
 $message = "";
 $menuInput = "";
 $textInput = "";
-$selection;
+// $selection;
 $result = "";
 // $results = array();
 // $tableheader = "";
@@ -35,8 +35,8 @@ if(isset($_POST['search'])) {
 
     $message = "";
 
-    //setting $textInput variable from user's selection
-    if(isset($_POST['userText'])) {
+    //setting $input variable from user's selection
+    if(isset($_POST['userText']) && ($_POST['userText'] != "")) {
         $textInput = cleanData($_POST['userText']);   
         
         // check if text input only contains letters and whitespace
@@ -44,36 +44,35 @@ if(isset($_POST['search'])) {
         if (!preg_match("/^[a-zA-ZåäöÅÄÖ ]*$/",$textInput)) {
             $message = "ange giltigt namn format";
             unset($textInput);    
-        } 
+        } else {
+            $input = $textInput;
+        }
 
-        $input = $textInput;
-
-    } 
-    
-    //setting $menuInput variable from user's selection
-    if(isset($_POST['animal'])){
+    } else if(isset($_POST['animal']) && ($_POST['animal'] != "")){
+        //setting $menuInput variable from user's selection
         $menuInput = $_POST['animal'];
         $input = $menuInput; 
-    } 
 
-    //handling empty or same search values 
-    if($menuInput == "" && $textInput == "") {
+    } else if (($_POST['animal']) == "" && ($_POST['userText']) == "") {
         $message = "Du behöver ange ett sökvärde";
-    } else  if ($menuInput == $textInput) {
-        $message = "Gör endast ett val";
-        unset($menuInput);
-        unset($textInput);
     } 
+ 
+
+    // if (!(isset($selection))  ) {
+    //     //echo count($selection);
+    //     $message = "Sökträff inte hittade";
+    // }
 
     //PLEASE CONFIRM IF THIS IS NECESSARY
     //if either input is "alla" - populate website with $allAnimals  
-    if($menuInput == "alla" || $textInput == "alla") {
-        foreach ($allAnimals as $animal) {
-            echo $animal['name']."<br>";
-        } 
+    // if($menuInput == "alla" || $textInput == "alla") {
+    //     foreach ($allAnimals as $animal) {
+    //         echo $animal['name']."<br>";
+    //     } 
+
         // unset($menuInput);
         // unset($textInput);
-    }
+    // }
 
 }
 
@@ -92,15 +91,18 @@ $query = "SELECT * FROM animals where name = :name";
 $statement = $dbh->prepare($query, array(PDO::FETCH_ASSOC));  
 
 $statement->execute(array(':name' => $input));
-// $statement->execute(array($menuInput));
 
 $selection = $statement->fetchAll();
 
+// echo "<pre>";
+// var_dump($selection);
+// echo "</pre>";
+
 if(($selection)){
     $result = $selection[0]['name'];
-}
+} 
 
-// $results[] = $menuOutput;
+
 
 
 //select an animal from input box
