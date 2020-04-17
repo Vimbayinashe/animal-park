@@ -15,6 +15,7 @@ $message = "";
 $menuInput = "";
 $textInput = "";
 // $selection;
+$sentence = "";
 $result = "";
 // $results = array();
 // $tableheader = "";
@@ -42,7 +43,7 @@ if(isset($_POST['search'])) {
         // check if text input only contains letters and whitespace
         // incorrect input values will nullify user input
         if (!preg_match("/^[a-zA-ZåäöÅÄÖ ]*$/",$textInput)) {
-            $message = "ange giltigt namn format";
+            $message = "Du behöver ange giltigt namn format";
             unset($textInput);    
         } else {
             $input = $textInput;
@@ -100,6 +101,7 @@ $selection = $statement->fetchAll();
 
 if(($selection)){
     $result = $selection[0]['name'];
+    $sentence = "<div><p>Namn: ". $selection[0]['name'] ."</p><p>Kategori: ".$selection[0]['category']."</p><p>Födelsedatum: ".$selection[0]['birthday']."</p></div>";
 } 
 
 
@@ -128,11 +130,11 @@ if(($selection)){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Djurparken</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1></h1>
 
-    <p><?php echo $message; ?></p>
 
     <!-- Data Input from User -->
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"     
@@ -157,16 +159,18 @@ if(($selection)){
         
     </form>
 
+    <p id = "message"><?php echo $message; ?></p>
+
     <!-- Results from search -->
     <div>
         <?php
             // foreach ($results as $animal) {
                 echo $result;
-
+                echo $sentence;
             // } 
         ?>          
     </div>
-
+    <!-- <div><p>Namn: </p><p>Kategori: </p><p>Födelsedatum: </p></div> -->
 
 </body>
 </html>

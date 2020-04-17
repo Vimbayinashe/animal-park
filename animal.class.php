@@ -30,11 +30,3 @@ class Animal {
 
 }
 
-// $today = strtotime("today");
-// $d=strtotime("2014-04-15"); 
-// $diff = $today - $d;;
-// echo $today."<br>";
-// echo $d."<br>";
-// echo "Difference in years is " . (date("Y", $diff) - 1970) ."<br>";
-// echo "Created date is " . date("Y-m-d h:i:sa", $d)."<br>";
-// echo "Today date is " . date("Y-m-d h:i:sa", $today)."<br>";
